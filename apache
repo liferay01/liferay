@@ -1,0 +1,28 @@
+能上网的话sudo apt-get install apache2
+
+不能上网先去官方下载apache2.0 : httpd-2.0.63.tar.gz 
+
+1.解压缩httpd-2.0.63.tar.gz到临时目录如~/httpd-2.0.63 
+
+2.进入~/httpd-2.0.63目录，执行 
+#./configure --prefix=/usr/local/apache2 --enable-module=so 
+#make 
+#make install 
+
+实际执行过程中可能要求你有root权限，所以要求使用sudo. 
+如果需要mod_rewrite模块，需要加参数： --enable-rewrite 
+
+3.启动和停止apache 
+启动：sudo /usr/local/apache2/bin/httpd -k start 
+启动时提示: 
+  httpd: Could not determine the server's fully qualified domain name, using 127.0.0.1 for ServerName. 
+解决办法是在http.conf中加一行: 
+ ServerName 127.0.0.1:80 
+
+停止：sudo /usr/local/apache2/bin/httpd -k stop 
+
+4.让Ubuntu开机自动启动apache. 
+1). 复制 /usr/local/apache2/bin/apachectl到/etc/init.d 
+2). 加载为服务 
+     sudo update-rc.d apachectl defaults 
+
