@@ -1,0 +1,46 @@
+drop table "Customer" cascade constraints;
+
+/*==============================================================*/
+/* Table: "Customer"                                            */
+/*==============================================================*/
+create table "Customer" 
+(
+   "Cus_ID"             INT                  not null,
+   "Cus_Name"           VARCHAR2(20)         not null,
+   "Cus_Password"       VARCHAR2(15)         not null,
+   "Cus_PhoneNum"       VARCHAR2(15)         not null,
+   "Cus_E-mail"         VARCHAR2(20)         not null,
+   constraint PK_CUSTOMER primary key ("Cus_ID")
+);
+
+drop table "Receive" cascade constraints;
+
+/*==============================================================*/
+/* Table: "Receive"                                             */
+/*==============================================================*/
+create table "Receive" 
+(
+   "Rec_ID"             VARCHAR2(10)         not null,
+   "Rec_Name"           VARCHAR2(10)         not null,
+   "Rec_PhoneNum"       VARCHAR2(15)         not null,
+   "Rec_Address"        VARCHAR2(40)         not null,
+   "Rec_PostCode"       VARCHAR2(10)         not null,
+   constraint PK_RECEIVE primary key ("Rec_ID")
+);
+
+
+drop table "Send" cascade constraints;
+
+/*==============================================================*/
+/* Table: "Send"                                                */
+/*==============================================================*/
+create table "Send" 
+(
+   "Send_ID"            VARCHAR2(10)         not null,
+   "Send_Name"          VARCHAR2(20),
+   "Send_PhoneNum"      VARCHAR2(15)         not null,
+   "Send_Address"       VARCHAR2(40)         not null,
+   "Send_PostCode"      VARCHAR2(10)         not null,
+   constraint PK_SEND primary key ("Send_ID")
+);
+

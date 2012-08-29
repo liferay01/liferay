@@ -1,0 +1,5 @@
+          <h:selectOneMenu id="nation" value="#{studentController.selected.nation}" title="#{bundle.CreateStudentTitle_nation}">
+                        <f:selectItems value="#{nationController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+       连接不上数据库的提示：
+无法使用oracle.jdbc.OracleDriver?(Io?异常:?The?Network?Adapter?could?not?establish?the?connection)?建立与jdbc:oracle:thin:@183.175.17.66:1521:liferay的连接
