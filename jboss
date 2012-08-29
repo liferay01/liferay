@@ -1,0 +1,237 @@
+11。我们修改了文件，那么需要让他立即有效
+
+# source /etc/profile
+
+12。#echo $JBOSS_HOME  用来查看你的环境变量是不是输出了。
+
+13。#cd $JBOSS_HOME/bin  进入到bin目录下用：
+
+./run.sh来启动Jboss.
+
+ 
+
+用IP来访问页面，http://127.0.0.1:8080就可以出现测试页面了。
+
+安装也就基本完成了。
+
+ 
+
+不过不要高兴的太早，如果不用本机访问一下试试，这就会让你失望的~~~~不过不要太着急，看看下面的解决方法
+
+ 
+
+1。用IP访问不了页面，但启动服务器的话是完全对的，这个问题让我大伤脑经。最后查下来原来是JBOSS启动下需要绑定IP。
+
+解决办法：
+
+#cd $JBOSS_HOME/bin
+
+#mkdir start.sh
+
+#vi start.sh
+
+添加以下内容  ./run.sh -Djboss.bind.address=jboss安装机器的IP&
+
+退出并保存
+
+#./start.sh启动了jboss这样就可以在外网访问了。
+
+ 
+
+摘自 gzh0222的专栏
+系统平台：RHEL 5.4
+
+Java version：jdk-6u17-linux-i586
+
+Jboss version：jboss-5.1.0.GA-jdk6
+
+三、安装准备
+
+下载jboss 5.1和jdk1.6
+jboss    http://sourceforge.net/projects/jboss/files/JBoss/JBoss-5.1.0.GA/jboss-5.1.0.GA-jdk6.zip/download
+jdk1.6   http://download.oracle.com/otn/java/jdk/6u31-b04/jdk-6u31-linux-i586.bin
+
+四、解压
+
+#./jdk-6u17-linux-i586.bin                              //当前目录生成一个jdk1.6.0_17
+#mv jdk1.6.0_17 /usr/local/java                      //把刚生成的目录"jdk1.6.0_17"重命名为"java"
+#unzip jboss-5.1.0.GA-jdk6.zip -d /usr/local/   //解压到/usr/local目录下
+#mv jboss-5.1.0.GA jboss                              //重命名为jboss
+
+五、配置环境变量
+
+#vi /etc/profile
+//添加如下内容
+JAVA_HOME="/usr/local/java"
+CLASS_PATH="$JAVA_HOME/lib:$JAVA_HOME/jre/lib"
+PATH=".:$PATH:$JAVA_HOME/bin"
+export JAVA_HOME CLASS_PATH PATH
+
+六、运行
+
+#/usr/local/jboss/bin/run.sh -b 10.0.0.133          //IP写本机地址
+复制代码
+
+[root@linux bin]# ./run.sh -b 10.0.0.133            
+=========================================================================
+
+  JBoss Bootstrap Environment
+
+  JBOSS_HOME: /usr/local/jboss
+
+  JAVA: /usr/local/jdk/jdk1.6.0_17/bin/java
+
+  JAVA_OPTS: -Dprogram.name=run.sh -server -Xms128m -Xmx512m -XX:MaxPermSize=256m -Dorg.jboss.resolver.warning=true -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Djava.net.preferIPv4Stack=true
+
+  CLASSPATH: /usr/local/jboss/bin/run.jar:/usr/local/jdk/jdk1.6.0_17/lib/tools.jar
+
+=========================================================================
+
+01:57:50,713 INFO  [ServerImpl] Starting JBoss (Microcontainer)...
+01:57:50,718 INFO  [ServerImpl] Release ID: JBoss [The Oracle] 5.1.0.GA (build: SVNTag=JBoss_5_1_0_GA date=200905221634)
+01:57:50,725 INFO  [ServerImpl] Bootstrap URL: null
+01:57:50,727 INFO  [ServerImpl] Home Dir: /usr/local/jboss
+01:57:50,742 INFO  [ServerImpl] Home URL: file:/usr/local/jboss/
+01:57:50,756 INFO  [ServerImpl] Library URL: file:/usr/local/jboss/lib/
+01:57:50,761 INFO  [ServerImpl] Patch URL: null
+01:57:50,776 INFO  [ServerImpl] Common Base URL: file:/usr/local/jboss/common/
+01:57:50,778 INFO  [ServerImpl] Common Library URL: file:/usr/local/jboss/common/lib/
+01:57:50,806 INFO  [ServerImpl] Server Name: default
+01:57:50,811 INFO  [ServerImpl] Server Base Dir: /usr/local/jboss/server
+01:57:50,814 INFO  [ServerImpl] Server Base URL: file:/usr/local/jboss/server/
+01:57:50,817 INFO  [ServerImpl] Server Config URL: file:/usr/local/jboss/server/default/conf/
+01:57:50,818 INFO  [ServerImpl] Server Home Dir: /usr/local/jboss/server/default
+01:57:50,826 INFO  [ServerImpl] Server Home URL: file:/usr/local/jboss/server/default/
+01:57:50,829 INFO  [ServerImpl] Server Data Dir: /usr/local/jboss/server/default/data
+01:57:50,832 INFO  [ServerImpl] Server Library URL: file:/usr/local/jboss/server/default/lib/
+01:57:50,834 INFO  [ServerImpl] Server Log Dir: /usr/local/jboss/server/default/log
+01:57:50,840 INFO  [ServerImpl] Server Native Dir: /usr/local/jboss/server/default/tmp/native
+01:57:50,857 INFO  [ServerImpl] Server Temp Dir: /usr/local/jboss/server/default/tmp
+01:57:50,860 INFO  [ServerImpl] Server Temp Deploy Dir: /usr/local/jboss/server/default/tmp/deploy
+01:57:52,509 INFO  [ServerImpl] Starting Microcontainer, bootstrapURL=file:/usr/local/jboss/server/default/conf/bootstrap.xml
+01:57:53,876 INFO  [VFSCacheFactory] Initializing VFSCache [org.jboss.virtual.plugins.cache.CombinedVFSCache]
+01:57:53,888 INFO  [VFSCacheFactory] Using VFSCache [CombinedVFSCache[real-cache: null]]
+01:57:54,617 INFO  [CopyMechanism] VFS temp dir: /usr/local/jboss/server/default/tmp
+01:57:54,637 INFO  [ZipEntryContext] VFS force nested jars copy-mode is enabled.
+01:57:58,247 INFO  [ServerInfo] Java version: 1.6.0_17,Sun Microsystems Inc.
+01:57:58,249 INFO  [ServerInfo] Java Runtime: Java(TM) SE Runtime Environment (build 1.6.0_17-b04)
+01:57:58,259 INFO  [ServerInfo] Java VM: Java HotSpot(TM) Server VM 14.3-b01,Sun Microsystems Inc.
+01:57:58,266 INFO  [ServerInfo] OS-System: Linux 2.6.18-194.el5,i386
+01:57:58,283 INFO  [ServerInfo] VM arguments: -Dprogram.name=run.sh -Xms128m -Xmx512m -XX:MaxPermSize=256m -Dorg.jboss.resolver.warning=true -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Djava.net.preferIPv4Stack=true -Djava.endorsed.dirs=/usr/local/jboss/lib/endorsed 
+01:57:58,408 INFO  [JMXKernel] Legacy JMX core initialized
+01:58:04,694 INFO  [ProfileServiceBootstrap] Loading profile: ProfileKey@19b7c62[domain=default, server=default, name=default]
+01:58:10,585 INFO  [WebService] Using RMI server codebase: http://10.0.0.133:8083/
+01:58:32,816 INFO  [NativeServerConfig] JBoss Web Services - Stack Native Core
+01:58:32,823 INFO  [NativeServerConfig] 3.1.2.GA
+01:58:34,296 INFO  [AttributeCallbackItem] Owner callback not implemented.
+01:58:37,600 INFO  [LogNotificationListener] Adding notification listener for logging mbean "jboss.system:service=Logging,type=Log4jService" to server org.jboss.mx.server.MBeanServerImpl@63a1ae[ defaultDomain='jboss' ]
+01:59:05,890 INFO  [Ejb3DependenciesDeployer] Encountered deployment AbstractVFSDeploymentContext@19213615{vfsfile:/usr/local/jboss/server/default/deploy/profileservice-secured.jar/}
+01:59:05,904 INFO  [Ejb3DependenciesDeployer] Encountered deployment AbstractVFSDeploymentContext@19213615{vfsfile:/usr/local/jboss/server/default/deploy/profileservice-secured.jar/}
+01:59:05,908 INFO  [Ejb3DependenciesDeployer] Encountered deployment AbstractVFSDeploymentContext@19213615{vfsfile:/usr/local/jboss/server/default/deploy/profileservice-secured.jar/}
+01:59:05,927 INFO  [Ejb3DependenciesDeployer] Encountered deployment AbstractVFSDeploymentContext@19213615{vfsfile:/usr/local/jboss/server/default/deploy/profileservice-secured.jar/}
+01:59:13,087 INFO  [JMXConnectorServerService] JMX Connector server: service:jmx:rmi://10.0.0.133/jndi/rmi://10.0.0.133:1090/jmxconnector
+01:59:15,053 INFO  [MailService] Mail Service bound to java:/Mail
+01:59:41,437 WARN  [JBossASSecurityMetadataStore] WARNING! POTENTIAL SECURITY RISK. It has been detected that the MessageSucker component which sucks messages from one node to another has not had its password changed from the installation default. Please see the JBoss Messaging user guide for instructions on how to do this.
+01:59:41,508 WARN  [AnnotationCreator] No ClassLoader provided, using TCCL: org.jboss.managed.api.annotation.ManagementComponent
+01:59:41,673 WARN  [AnnotationCreator] No ClassLoader provided, using TCCL: org.jboss.managed.api.annotation.ManagementComponent
+01:59:41,797 INFO  [TransactionManagerService] JBossTS Transaction Service (JTA version - tag:JBOSSTS_4_6_1_GA) - JBoss Inc.
+01:59:41,802 INFO  [TransactionManagerService] Setting up property manager MBean and JMX layer
+01:59:42,339 INFO  [TransactionManagerService] Initializing recovery manager
+01:59:43,127 INFO  [TransactionManagerService] Recovery manager configured
+01:59:43,131 INFO  [TransactionManagerService] Binding TransactionManager JNDI Reference
+01:59:44,517 INFO  [TransactionManagerService] Starting transaction recovery manager
+01:59:45,893 INFO  [AprLifecycleListener] The Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: /usr/local/jdk/jdk1.6.0_17/jre/lib/i386/server:/usr/local/jdk/jdk1.6.0_17/jre/lib/i386:/usr/local/jdk/jdk1.6.0_17/jre/../lib/i386:/usr/java/packages/lib/i386:/lib:/usr/lib
+01:59:46,259 INFO  [Http11Protocol] Initializing Coyote HTTP/1.1 on http-10.0.0.133-8080
+01:59:46,266 INFO  [AjpProtocol] Initializing Coyote AJP/1.3 on ajp-10.0.0.133-8009
+01:59:46,375 INFO  [StandardService] Starting service jboss.web
+01:59:46,389 INFO  [StandardEngine] Starting Servlet Engine: JBoss Web/2.1.3.GA
+01:59:46,482 INFO  [Catalina] Server startup in 214 ms
+01:59:46,554 INFO  [TomcatDeployment] deploy, ctxPath=/jbossws
+01:59:47,951 INFO  [TomcatDeployment] deploy, ctxPath=/web-console
+01:59:48,849 INFO  [TomcatDeployment] deploy, ctxPath=/invoker
+01:59:49,346 INFO  [RARDeployment] Required license terms exist, view vfszip:/usr/local/jboss/server/default/deploy/jboss-local-jdbc.rar/META-INF/ra.xml
+01:59:49,997 INFO  [RARDeployment] Required license terms exist, view vfszip:/usr/local/jboss/server/default/deploy/jboss-xa-jdbc.rar/META-INF/ra.xml
+01:59:50,087 INFO  [RARDeployment] Required license terms exist, view vfszip:/usr/local/jboss/server/default/deploy/jms-ra.rar/META-INF/ra.xml
+01:59:50,134 INFO  [RARDeployment] Required license terms exist, view vfszip:/usr/local/jboss/server/default/deploy/mail-ra.rar/META-INF/ra.xml
+01:59:50,221 INFO  [RARDeployment] Required license terms exist, view vfszip:/usr/local/jboss/server/default/deploy/quartz-ra.rar/META-INF/ra.xml
+01:59:50,456 INFO  [SimpleThreadPool] Job execution threads will use class loader of thread: main
+01:59:51,545 INFO  [QuartzScheduler] Quartz Scheduler v.1.5.2 created.
+01:59:51,559 INFO  [RAMJobStore] RAMJobStore initialized.
+01:59:51,561 INFO  [StdSchedulerFactory] Quartz scheduler 'DefaultQuartzScheduler' initialized from default resource file in Quartz package: 'quartz.properties'
+01:59:51,563 INFO  [StdSchedulerFactory] Quartz scheduler version: 1.5.2
+01:59:51,566 INFO  [QuartzScheduler] Scheduler DefaultQuartzScheduler_$_NON_CLUSTERED started.
+01:59:53,273 INFO  [ConnectionFactoryBindingService] Bound ConnectionManager 'jboss.jca:service=DataSourceBinding,name=DefaultDS' to JNDI name 'java:DefaultDS'
+01:59:55,170 INFO  [ServerPeer] JBoss Messaging 1.4.3.GA server [0] started
+01:59:55,735 INFO  [ConnectionFactory] Connector bisocket://10.0.0.133:4457 has leasing enabled, lease period 10000 milliseconds
+01:59:55,739 INFO  [ConnectionFactory] org.jboss.jms.server.connectionfactory.ConnectionFactory@1e88ea started
+01:59:55,795 INFO  [QueueService] Queue[/queue/DLQ] started, fullSize=200000, pageSize=2000, downCacheSize=2000
+01:59:55,801 INFO  [ConnectionFactoryJNDIMapper] supportsFailover attribute is true on connection factory: jboss.messaging.connectionfactory:service=ClusteredConnectionFactory but post office is non clustered. So connection factory will *not* support failover
+01:59:55,813 INFO  [ConnectionFactoryJNDIMapper] supportsLoadBalancing attribute is true on connection factory: jboss.messaging.connectionfactory:service=ClusteredConnectionFactory but post office is non clustered. So connection factory will *not* support load balancing
+01:59:55,835 INFO  [ConnectionFactory] Connector bisocket://10.0.0.133:4457 has leasing enabled, lease period 10000 milliseconds
+01:59:55,845 INFO  [ConnectionFactory] org.jboss.jms.server.connectionfactory.ConnectionFactory@17503eb started
+01:59:55,850 INFO  [ConnectionFactory] Connector bisocket://10.0.0.133:4457 has leasing enabled, lease period 10000 milliseconds
+01:59:55,852 INFO  [ConnectionFactory] org.jboss.jms.server.connectionfactory.ConnectionFactory@956f01 started
+01:59:55,881 INFO  [QueueService] Queue[/queue/ExpiryQueue] started, fullSize=200000, pageSize=2000, downCacheSize=2000
+01:59:56,199 INFO  [ConnectionFactoryBindingService] Bound ConnectionManager 'jboss.jca:service=ConnectionFactoryBinding,name=JmsXA' to JNDI name 'java:JmsXA'
+02:00:09,338 INFO  [JBossASKernel] Created KernelDeployment for: profileservice-secured.jar
+02:00:09,384 INFO  [JBossASKernel] installing bean: jboss.j2ee:jar=profileservice-secured.jar,name=SecureProfileService,service=EJB3
+02:00:09,385 INFO  [JBossASKernel]   with dependencies:
+02:00:09,388 INFO  [JBossASKernel]   and demands:
+02:00:09,400 INFO  [JBossASKernel]      jndi:SecureManagementView/remote-org.jboss.deployers.spi.management.ManagementView
+02:00:09,402 INFO  [JBossASKernel]      jboss.ejb:service=EJBTimerService
+02:00:09,404 INFO  [JBossASKernel]   and supplies:
+02:00:09,406 INFO  [JBossASKernel]      Class:org.jboss.profileservice.spi.ProfileService
+02:00:09,408 INFO  [JBossASKernel]      jndi:SecureProfileService/remote
+02:00:09,410 INFO  [JBossASKernel]      jndi:SecureProfileService/remote-org.jboss.profileservice.spi.ProfileService
+02:00:09,414 INFO  [JBossASKernel] Added bean(jboss.j2ee:jar=profileservice-secured.jar,name=SecureProfileService,service=EJB3) to KernelDeployment of: profileservice-secured.jar
+02:00:09,422 INFO  [JBossASKernel] installing bean: jboss.j2ee:jar=profileservice-secured.jar,name=SecureDeploymentManager,service=EJB3
+02:00:09,424 INFO  [JBossASKernel]   with dependencies:
+02:00:09,426 INFO  [JBossASKernel]   and demands:
+02:00:09,430 INFO  [JBossASKernel]      jboss.ejb:service=EJBTimerService
+02:00:09,432 INFO  [JBossASKernel]   and supplies:
+02:00:09,435 INFO  [JBossASKernel]      jndi:SecureDeploymentManager/remote-org.jboss.deployers.spi.management.deploy.DeploymentManager
+02:00:09,437 INFO  [JBossASKernel]      Class:org.jboss.deployers.spi.management.deploy.DeploymentManager
+02:00:09,443 INFO  [JBossASKernel]      jndi:SecureDeploymentManager/remote
+02:00:09,450 INFO  [JBossASKernel] Added bean(jboss.j2ee:jar=profileservice-secured.jar,name=SecureDeploymentManager,service=EJB3) to KernelDeployment of: profileservice-secured.jar
+02:00:09,452 INFO  [JBossASKernel] installing bean: jboss.j2ee:jar=profileservice-secured.jar,name=SecureManagementView,service=EJB3
+02:00:09,454 INFO  [JBossASKernel]   with dependencies:
+02:00:09,459 INFO  [JBossASKernel]   and demands:
+02:00:09,461 INFO  [JBossASKernel]      jboss.ejb:service=EJBTimerService
+02:00:09,462 INFO  [JBossASKernel]   and supplies:
+02:00:09,464 INFO  [JBossASKernel]      jndi:SecureManagementView/remote-org.jboss.deployers.spi.management.ManagementView
+02:00:09,466 INFO  [JBossASKernel]      Class:org.jboss.deployers.spi.management.ManagementView
+02:00:09,468 INFO  [JBossASKernel]      jndi:SecureManagementView/remote
+02:00:09,470 INFO  [JBossASKernel] Added bean(jboss.j2ee:jar=profileservice-secured.jar,name=SecureManagementView,service=EJB3) to KernelDeployment of: profileservice-secured.jar
+02:00:09,505 INFO  [EJB3EndpointDeployer] Deploy AbstractBeanMetaData@1431022{name=jboss.j2ee:jar=profileservice-secured.jar,name=SecureProfileService,service=EJB3_endpoint bean=org.jboss.ejb3.endpoint.deployers.impl.EndpointImpl properties=[container] constructor=null autowireCandidate=true}
+02:00:09,522 INFO  [EJB3EndpointDeployer] Deploy AbstractBeanMetaData@14534db{name=jboss.j2ee:jar=profileservice-secured.jar,name=SecureDeploymentManager,service=EJB3_endpoint bean=org.jboss.ejb3.endpoint.deployers.impl.EndpointImpl properties=[container] constructor=null autowireCandidate=true}
+02:00:09,523 INFO  [EJB3EndpointDeployer] Deploy AbstractBeanMetaData@7787ee{name=jboss.j2ee:jar=profileservice-secured.jar,name=SecureManagementView,service=EJB3_endpoint bean=org.jboss.ejb3.endpoint.deployers.impl.EndpointImpl properties=[container] constructor=null autowireCandidate=true}
+02:00:10,269 INFO  [SessionSpecContainer] Starting jboss.j2ee:jar=profileservice-secured.jar,name=SecureDeploymentManager,service=EJB3
+02:00:10,447 INFO  [EJBContainer] STARTED EJB: org.jboss.profileservice.ejb.SecureDeploymentManager ejbName: SecureDeploymentManager
+02:00:10,817 INFO  [JndiSessionRegistrarBase] Binding the following Entries in Global JNDI:
+
+        SecureDeploymentManager/remote - EJB3.x Default Remote Business Interface
+        SecureDeploymentManager/remote-org.jboss.deployers.spi.management.deploy.DeploymentManager - EJB3.x Remote Business Interface
+
+02:00:10,940 INFO  [SessionSpecContainer] Starting jboss.j2ee:jar=profileservice-secured.jar,name=SecureManagementView,service=EJB3
+02:00:10,945 INFO  [EJBContainer] STARTED EJB: org.jboss.profileservice.ejb.SecureManagementView ejbName: SecureManagementView
+02:00:11,059 INFO  [JndiSessionRegistrarBase] Binding the following Entries in Global JNDI:
+
+        SecureManagementView/remote - EJB3.x Default Remote Business Interface
+        SecureManagementView/remote-org.jboss.deployers.spi.management.ManagementView - EJB3.x Remote Business Interface
+
+02:00:11,217 INFO  [SessionSpecContainer] Starting jboss.j2ee:jar=profileservice-secured.jar,name=SecureProfileService,service=EJB3
+02:00:11,226 INFO  [EJBContainer] STARTED EJB: org.jboss.profileservice.ejb.SecureProfileServiceBean ejbName: SecureProfileService
+02:00:11,254 INFO  [JndiSessionRegistrarBase] Binding the following Entries in Global JNDI:
+
+        SecureProfileService/remote - EJB3.x Default Remote Business Interface
+        SecureProfileService/remote-org.jboss.profileservice.spi.ProfileService - EJB3.x Remote Business Interface
+
+02:00:11,982 INFO  [TomcatDeployment] deploy, ctxPath=/admin-console
+02:00:12,321 INFO  [config] Initializing Mojarra (1.2_12-b01-FCS) for context '/admin-console'
+02:00:20,855 INFO  [TomcatDeployment] deploy, ctxPath=/
+02:00:20,988 INFO  [TomcatDeployment] deploy, ctxPath=/jmx-console
+02:00:21,378 INFO  [Http11Protocol] Starting Coyote HTTP/1.1 on http-10.0.0.133-8080
+02:00:21,436 INFO  [AjpProtocol] Starting Coyote AJP/1.3 on ajp-10.0.0.133-8009
+02:00:21,475 INFO  [ServerImpl] JBoss (Microcontainer) [5.1.0.GA (build: SVNTag=JBoss_5_1_0_GA date=200905221634)] Started in 2m:30s:582ms
+
+复制代码

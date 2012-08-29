@@ -1,0 +1,91 @@
+1.1     Glassfish v3 服务器安装配置
+1.1.1 解压并安装
+mkdir /opt/glassfish
+cd /opt/glassfish
+unzip /home/pkg/glassfish-v3-preview-b46.zip
+启动 glassfish：
+/opt/glassfish/glassfishv3/bin/asadmin start-domain
+1.1.2 创建新的domain
+创建新domain执行下面命令：
+/opt/glassfish/glassfishv3/bin/asadmin create-domain --adminport 8484 --instanceport 8080 --savemasterpassword=true astro_domain1
+看到如下提示，黑体为输入：
+Enter admin user name[Enter to accept default]>administrator
+Enter admin password>******
+Enter admin password again>******
+Using port 8484 for Admin.
+Default port 8080 for HTTP Instance is in use. Using 8080
+Using default port 7676 for JMS.
+Using default port 3700 for IIOP.
+Using default port 8181 for HTTP_SSL.
+Using default port 3820 for IIOP_SSL.
+Using default port 3920 for IIOP_MUTUALAUTH.
+Default port 8686 for JMX_ADMIN is in use. Using 51013
+Distinguished Name of the self-signed X.509 Server Certificate is:
+[CN=test26.astro.gz,OU=GlassFish,O=Sun Microsystems,L=Santa Clara,ST=California,C=US]
+Domain astro_domain1 created.
+Command create-domain executed successfully.
+ 
+Enter admin user name [default: anonymous]> administrator
+Enter the admin password>
+Enter the admin password again>
+Enter the master password [Enter to accept default]>
+Enter the master password again>
+Using port 8484 for Admin.
+Using port 8080 for HTTP Instance.
+Using default port 7676 for JMS.
+Using default port 3700 for IIOP.
+Using default port 8181 for HTTP_SSL.
+Using default port 3820 for IIOP_SSL.
+Using default port 3920 for IIOP_MUTUALAUTH.
+Using default port 8686 for JMX_ADMIN.
+Distinguished Name of the self-signed X.509 Server Certificate is:
+[CN=localhost,OU=GlassFish,O=Sun Microsystems,L=Santa Clara,ST=California,C=US]
+Domain astro_domain1 created.
+Domain astro_domain1 admin port is 8484.
+Domain astro_domain1 admin user is "administrator".
+Command create-domain executed successfully.
+看到http端口默认为8080，这个端口将在后面apache配置时用到。
+ 
+启动新domain：
+/opt/glassfish/glassfishv3/bin/asadmin start-domain astro_domain1
+ 
+Launching Watchdog in a separate JVM.  The Domain is now remote-restart enabled.
+ 
+Name of the domain started: [astro_domain1] and
+its location: [/opt/glassfish/glassfishv3/glassfish/domains/astro_domain1].
+Admin port for the domain: [8484].
+ 
+登录一次，执行下面命令（很重要，否则不可关闭glassfish）：
+/opt/glassfish/glassfishv3/bin/asadmin login -p 8484
+看到如下输出，黑体是输入
+Enter admin user name[Enter to accept default]>administrator
+Enter admin password>******
+GlassFish v3  (build 46)
+Login information relevant to admin user name [administrator] for host [localhost] and admin port [8484] stored at [/root/.asadminpass] successfully.
+Make sure that this file remains protected. Information stored in this file will be used by asadmin commands to manage associated domain.
+Command login executed successfully.
+停掉默认domian：
+/opt/glassfish/glassfishv3/bin/asadmin stop-domain domain1
+Waiting for the domain to stop .......
+Command stop-domain executed successfully.
+1.1.3 GlassFish的自启动
+cd /home/pkg/
+cp glassfishd  /etc/init.d/
+chmod a+x /etc/init.d/glassfishd
+chkconfig --add glassfishd
+chkconfig --level 345 glassfishd on
+ 
+验证glassfish自启动成功：
+登录http://IP:8080
+ 
+1.1.4    优化glassfish
+vi /opt/glassfish/glassfishv3/glassfish/domains/astro_domain1/config/domain.xml
+1.1.5部署war包
+/opt/glassfish/glassfishv3/bin/asadmin deploy --port 8484 --contextroot / /home/pkg/dhs.war
+/opt/glassfish/glassfishv3/bin/asadmin deploy --port 8484 /home/pkg/cms.war
+ 
+ 
+取消部署：（系统升级或者维护时用到）
+/opt/glassfish/glassfishv3/bin/asadmin  undeploy --port 8484 dhs
+/opt/glassfish/glassfishv3/bin/asadmin undeploy --port 8484 cms
+

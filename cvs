@@ -1,0 +1,145 @@
+* Linux 安装 cvs *
+
+    ***************************************************
+
+    Linux_Configure_CVS
+
+    1. CVS软件包的安装
+
+    第一步：下载cvs软件包,cvs-11.22.tar.gz
+
+    第二步：解压缩文件
+
+    gz包
+
+    #tar –zxvf cvs-11.22.tar.gz
+
+    第三步：安装cvs
+
+    #cd cvs-11.22
+
+    #./configure
+
+    #make
+
+    #make install
+
+    第四步：检测
+
+    #which cvs
+
+    结果：/usr/bin/cvs
+
+    2. CVS服务器的配置
+
+    第一步：创建用户和组
+
+    //添加cvs组
+
+    # groupadd cvs
+
+    //添加cvs用户,组为cvs
+
+    # useradd cvsroot –g cvs
+
+    //设置密码
+
+    # passwd cvsroot (设密码为root)
+
+    第二步：创建服务器根目录
+
+    # mkdir /home/cvsroot/webapps
+
+    第三步：// nothing
+
+    第四步：添加环境变量CVSROOT
+
+    # vi /etc/profile
+
+    添加以下内容
+
+    CVSROOT=/home/cvsroot
+
+    export CVSROOT
+
+    第五步：修改文件/etc/services, 添加如下两行：
+
+    cvspserver 2401/tcp # cvs client/server operations
+
+    cvspserver 2401/udp # cvs client/server operations
+
+    第六步：修改文件/etc/xinetd.d/cvspserver，其内容为：
+
+    //如果没有此文件就先创建一个cvspserver文件s
+
+    # vi /etc/xinetd.d/cvspserver
+
+    添加以下内容
+
+    service cvspserver
+
+    {
+
+     disable = no
+
+     socket_type = stream
+
+     protocol = tcp
+
+     wait = no
+
+     user = root
+
+     passenv = PATH
+
+     server = /usr/bin/cvs ## which cvs得到的结果
+
+     server_args = -f --allow-root=/home/csvroot pserver
+
+     log_on_success +=USERID
+
+     log_on_failure +=USERID
+
+    }
+
+    第七步：重新启动xinetd
+
+    # /etc/initd.d/xinetd restart
+
+    第八步：检测结果
+
+    # netstat –l | grep cvspserver
+
+    如果显示
+
+    tcp 0 0 *:cvspserver *:* LISTEN
+
+    cvs服务器启动成功；
+
+    否则察看日志，寻找错误所在。日志可能在/var/log/messages中。
+
+    第九步：初始化cvs根目录
+
+    # cvs init
+
+    如果出错
+
+     # cvs -d /home/csvroot init
+
+    第十步：登陆cvs服务器
+
+    #cvs -d :pserver:cvsroot@127.0.0.1:/home/cvsroot login
+
+    passwd : (填root)
+
+    如果没有报错信息，则CVS服务器可以使用，否则，要根据报错信息进行调整。
+
+    注: 添加一个用户拥有cvs权限(即添加一个用户到cvs组中就可以)
+
+    # useradd cvstest -g cvs
+
+    # passwd cvstest
+
+    # new PASSWORD : (cvstest)
+
+    用户cvstest就可以得到cvs组的权限访问cvs
